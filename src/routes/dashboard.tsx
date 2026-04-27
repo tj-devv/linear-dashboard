@@ -5,7 +5,6 @@ import { StatusPieChart } from "@/components/Charts/StatusPieChart";
 import { PriorityBarChart } from "@/components/Charts/PriorityBarChart";
 import { TimelineChart } from "@/components/Charts/TimelineChart";
 import { AssigneeBarChart } from "@/components/Charts/AssigneeBarChart";
-import { ProjectBarChart } from "@/components/Charts/ProjectBarChart";
 import { IssuesDataTable } from "@/components/IssuesDataTable";
 import { FiltersBar } from "@/components/FiltersBar";
 import { InsightsPanel } from "@/components/InsightsPanel";
@@ -109,8 +108,6 @@ function Dashboard() {
             <TimelineChart />
             <AssigneeBarChart />
           </div>
-
-          <ProjectBarChart />
 
           <InsightsPanel />
 

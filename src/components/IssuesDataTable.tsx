@@ -202,7 +202,7 @@ export function IssuesDataTable() {
 
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            {table.get.getAllLeafColumns().filter((col) => col.getCanHide()).length} columns
+            {table.getAllLeafColumns().filter((col) => col.getCanHide()).length} columns
           </span>
           <div className="relative group">
             <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">

@@ -66,7 +66,7 @@ export function StatusChart() {
               strokeDasharray="3 3"
               horizontal={false}
               stroke="#e5e7eb"
-              dark stroke="#374151"
+              //dark stroke="#374151"
             />
             <XAxis type="number" stroke="#6b7280" fontSize={12} />
             <YAxis

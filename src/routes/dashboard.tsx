@@ -10,13 +10,9 @@ import { FiltersBar } from "@/components/FiltersBar";
 import { InsightsPanel } from "@/components/InsightsPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
-import { SyncButton } from "@/components/SyncButton";
-import { SyncStatus } from "@/components/SyncStatus";
-import { FileSpreadsheet, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { calculateKPIs } from "@/lib/analytics";
-import { isConfigured } from "@/env";
-import { useLinearIssues, useSyncIssues, useFormattedLastSync } from "@/hooks/useLinearIssues";
 import { useMemo, useEffect } from "react";
 
 export const Route = createFileRoute("/dashboard")({
@@ -24,9 +20,7 @@ export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {
     const store = useIssuesStore.getState();
     await store.initFromStorage();
-
-    // If not configured for live mode, require CSV data
-    if (!isConfigured && store.issues.length === 0) {
+    if (store.issues.length === 0) {
       throw useRouter().history.replace("/upload");
     }
   },
@@ -38,63 +32,38 @@ function useRouter() {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { issues: csvIssues, file, initFromStorage, isLoading: csvLoading } = useIssuesStore();
-  const syncMutation = useSyncIssues();
-
-  // Use live data if configured, otherwise fallback to CSV
-  const isLiveMode = isConfigured;
-
-  // Get issues from either source
-  const {
-    data: liveIssues = [],
-    isLoading: liveLoading,
-    error: liveError,
-    refetch,
-  } = useLinearIssues();
-
-  const issues = isLiveMode ? liveIssues : csvIssues;
+  const { issues, file, initFromStorage, isLoading } = useIssuesStore();
 
   useEffect(() => {
     initFromStorage();
   }, [initFromStorage]);
 
+  useEffect(() => {
+    if (!isLoading && issues.length === 0) {
+      navigate({ to: "/upload" });
+    }
+  }, [issues, isLoading, navigate]);
+
   const kpis = useMemo(() => {
     return calculateKPIs(issues);
   }, [issues]);
 
-  const lastSync = useFormattedLastSync();
-
-  const isLoading = isLiveMode ? liveLoading : csvLoading;
-  const hasData = issues.length > 0;
-
-  const handleSyncComplete = () => {
-    refetch();
-  };
-
-  if (isLoading && !hasData) {
+  if (isLoading) {
     return <LoadingState message="Loading dashboard..." />;
   }
 
-  if (!hasData) {
+  if (issues.length === 0) {
     return (
       <EmptyState
         title="No data loaded"
-        description={
-          isLiveMode
-            ? "Sync from Linear to see your analytics"
-            : "Upload a Linear CSV to see your analytics"
-        }
+        description="Upload a Linear CSV to see your analytics"
         action={
-          isLiveMode ? (
-            <SyncButton onSuccess={handleSyncComplete} />
-          ) : (
-            <button
-              onClick={() => navigate({ to: "/upload" })}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-            >
-              Upload CSV
-            </button>
-          )
+          <button
+            onClick={() => navigate({ to: "/upload" })}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            Upload CSV
+          </button>
         }
       />
     );
@@ -120,21 +89,7 @@ function Dashboard() {
                   {file.name} • {file.recordCount.toLocaleString()} records
                 </p>
               )}
-              {isLiveMode && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {issues.length.toLocaleString()} issues • Last sync: {lastSync}
-                </p>
-              )}
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {isLiveMode && (
-              <>
-                <SyncStatus />
-                <SyncButton />
-              </>
-            )}
           </div>
         </div>
       </header>

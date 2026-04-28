@@ -22,6 +22,9 @@ const STATUS_MAP: Record<string, LinearStatus> = {
   canceled: "Canceled",
   duplicate: "Duplicate",
   unstarted: "Unstarted",
+  qa: "QA",
+  "pending qa deploy": "Pending QA Deploy",
+  triage: "Triage",
 };
 
 const COLUMNS = {

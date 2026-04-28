@@ -21,6 +21,9 @@ const STATUS_COLORS: Record<string, string> = {
   Canceled: "#ef4444",
   Duplicate: "#9ca3af",
   Unstarted: "#94a3b8",
+  QA: "#06b6d4",
+  "Pending QA Deploy": "#f97316",
+  Triage: "#ec4899",
 };
 
 export const calculateKPIs = (issues: NormalizedIssue[]): KPIValues => {

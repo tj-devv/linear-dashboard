@@ -33,6 +33,9 @@ const STATUS_COLORS: Record<string, string> = {
   Canceled: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
   Duplicate: "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400",
   Unstarted: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400",
+  QA: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300",
+  "Pending QA Deploy": "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
+  Triage: "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300",
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -52,10 +55,11 @@ export function IssuesDataTable() {
     title: true,
     status: true,
     priority: true,
-    project: true,
+    project: false,
     assignee: true,
-    created: true,
-    updated: true,
+    createdDate: true,
+    updatedDate: false,
+    dueDate: true,
   });
 
   const filteredData = useMemo(() => {
@@ -154,6 +158,28 @@ export function IssuesDataTable() {
           );
         },
       },
+      {
+        accessorKey: "dueDate",
+        header: "Due Date",
+        cell: (info) => {
+          const issue = info.row.original;
+          if (!issue.dueDateObj) return <span className="text-gray-400">—</span>;
+          
+          const isOverdue = issue.dueDateObj && issue.dueDateObj < new Date() && !issue.completedDate;
+          const daysOverdue = issue.dueDateObj ? Math.floor((new Date().getTime() - issue.dueDateObj.getTime()) / (1000 * 60 * 60 * 24)) : null;
+          
+          return (
+            <span className={cn(
+              "text-sm",
+              isOverdue && "text-red-600 font-medium dark:text-red-400",
+              !isOverdue && "text-gray-500 dark:text-gray-400"
+            )}>
+              {formatDate(issue.dueDateObj)}
+              {isOverdue && daysOverdue && <span className="ml-1 text-xs">({daysOverdue}d)</span>}
+            </span>
+          );
+        },
+      },
     ],
     []
   );
@@ -204,11 +230,11 @@ export function IssuesDataTable() {
           <span className="text-sm text-gray-500 dark:text-gray-400">
             {table.getAllLeafColumns().filter((col) => col.getCanHide()).length} columns
           </span>
-          <div className="relative group">
+          <div className="relative group z-50">
             <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
               <Eye className="h-4 w-4" />
             </button>
-            <div className="absolute right-0 top-full z-10 hidden min-w-[150px] rounded-lg border border-gray-200 bg-white p-2 shadow-lg group-hover:block dark:border-gray-700 dark:bg-gray-800">
+            <div className="absolute right-0 top-full z-[60] mt-1 hidden min-w-[150px] rounded-lg border border-gray-200 bg-white p-2 shadow-lg group-hover:block dark:border-gray-700 dark:bg-gray-800">
               {table.getAllLeafColumns().map((col) => (
                 <label
                   key={col.id}

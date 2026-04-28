@@ -7,7 +7,10 @@ export type LinearStatus =
   | "Done"
   | "Canceled"
   | "Duplicate"
-  | "Unstarted";
+  | "Unstarted"
+  | "QA"
+  | "Pending QA Deploy"
+  | "Triage";
 
 export interface LinearIssue {
   id: string;

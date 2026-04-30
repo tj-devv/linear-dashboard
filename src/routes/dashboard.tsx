@@ -10,7 +10,7 @@ import { FiltersBar } from "@/components/FiltersBar";
 import { InsightsPanel } from "@/components/InsightsPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { calculateKPIs } from "@/lib/analytics";
 import { useMemo, useEffect } from "react";
@@ -32,7 +32,12 @@ function useRouter() {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { issues, file, initFromStorage, isLoading } = useIssuesStore();
+  const { issues, file, initFromStorage, isLoading, clearIssues } = useIssuesStore();
+
+  const handleNewUpload = async () => {
+    await clearIssues();
+    navigate({ to: "/upload" });
+  };
 
   useEffect(() => {
     initFromStorage();
@@ -90,6 +95,16 @@ function Dashboard() {
                 </p>
               )}
             </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleNewUpload}
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              <Upload className="h-4 w-4" />
+              Upload new CSV
+            </button>
           </div>
         </div>
       </header>

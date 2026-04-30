@@ -9,8 +9,7 @@ import {
 import { useIssuesStore } from "@/store/useIssuesStore";
 import { getInsights } from "@/lib/analytics";
 import { useMemo } from "react";
-import { cn, formatDate, formatDays } from "@/lib/utils";
-import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
+import { cn, formatDays } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 
 export function InsightsPanel() {
@@ -114,12 +113,9 @@ export function InsightsPanel() {
       </div>
 
       {file && (
-        <div className="flex items-center justify-between border-t border-gray-200 pt-3 dark:border-gray-700">
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            <p>File: {file.name}</p>
-            <p>{file.recordCount.toLocaleString()} records</p>
-          </div>
-          <DarkModeToggle />
+        <div className="text-xs text-gray-500 dark:text-gray-400">
+          <p>File: {file.name}</p>
+          <p>{file.recordCount.toLocaleString()} records</p>
         </div>
       )}
     </div>

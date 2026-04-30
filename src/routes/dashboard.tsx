@@ -11,10 +11,10 @@ import { InsightsPanel } from "@/components/InsightsPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { ArrowLeft, Upload, FileSpreadsheet } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { calculateKPIs } from "@/lib/analytics";
 import { useMemo, useEffect } from "react";
-import { format } from "date-fns";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -39,6 +39,7 @@ function Dashboard() {
     await clearIssues();
     navigate({ to: "/upload" });
   };
+  const { issues, file, initFromStorage, isLoading } = useIssuesStore();
 
   useEffect(() => {
     initFromStorage();

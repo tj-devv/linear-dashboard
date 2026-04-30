@@ -7,6 +7,7 @@ import { TimelineChart } from "@/components/Charts/TimelineChart";
 import { AssigneeBarChart } from "@/components/Charts/AssigneeBarChart";
 import { IssuesDataTable } from "@/components/IssuesDataTable";
 import { FiltersBar } from "@/components/FiltersBar";
+import { StatusQuickFilter } from "@/components/StatusQuickFilter";
 import { InsightsPanel } from "@/components/InsightsPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
@@ -112,6 +113,8 @@ function Dashboard() {
       <main className="p-6">
         <div className="mx-auto max-w-[1600px] space-y-6">
           <KPIGrid kpis={kpis} />
+
+          <StatusQuickFilter />
 
           <div className="grid gap-6 lg:grid-cols-2">
             <StatusPieChart />

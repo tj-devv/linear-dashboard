@@ -16,14 +16,15 @@ const PRIORITY_MAP: Record<string, Priority> = {
 const STATUS_MAP: Record<string, LinearStatus> = {
   backlog: "Backlog",
   todo: "Todo",
-  "in progress": "In Progress",
-  "in review": "In Review",
+  "inprogress": "In Progress",
+  "inreview": "In Review",
   done: "Done",
   canceled: "Canceled",
   duplicate: "Duplicate",
   unstarted: "Unstarted",
   qa: "QA",
-  "pending qa deploy": "Pending QA Deploy",
+  "inqa": "QA",
+  "pendingqadeploy": "Pending QA Deploy",
   triage: "Triage",
 };
 

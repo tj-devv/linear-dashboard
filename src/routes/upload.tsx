@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { UploadDropzone } from "@/components/UploadDropzone";
-import { FileSpreadsheet, ArrowLeft } from "lucide-react";
+import { FileSpreadsheet } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useIssuesStore } from "@/store/useIssuesStore";
 import { useEffect } from "react";
@@ -12,25 +12,13 @@ export const Route = createFileRoute("/upload")({
 
 function Upload() {
   const navigate = useNavigate();
-  const { issues, initFromStorage, isLoading } = useIssuesStore();
-
-  useEffect(() => {
-    initFromStorage();
-  }, [initFromStorage]);
+  const { issues } = useIssuesStore();
 
   useEffect(() => {
     if (issues.length > 0) {
       navigate({ to: "/dashboard" });
     }
   }, [issues, navigate]);
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
-        <div className="animate-pulse text-gray-500 dark:text-gray-400">Loading...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-950">

@@ -10,53 +10,27 @@ import { FiltersBar } from "@/components/FiltersBar";
 import { StatusQuickFilter } from "@/components/StatusQuickFilter";
 import { InsightsPanel } from "@/components/InsightsPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { LoadingState } from "@/components/ui/LoadingState";
 import { ArrowLeft, Upload } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { calculateKPIs } from "@/lib/analytics";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
-  beforeLoad: async () => {
-    const store = useIssuesStore.getState();
-    await store.initFromStorage();
-    if (store.issues.length === 0) {
-      throw useRouter().history.replace("/upload");
-    }
-  },
 });
-
-function useRouter() {
-  return { history: { replace: (path: string) => window.history.replaceState(null, "", path) } };
-}
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { issues, file, initFromStorage, isLoading, clearIssues } = useIssuesStore();
+  const { issues, file, clearIssues } = useIssuesStore();
 
   const handleNewUpload = async () => {
-    await clearIssues();
+    clearIssues();
     navigate({ to: "/upload" });
   };
-
-  useEffect(() => {
-    initFromStorage();
-  }, [initFromStorage]);
-
-  useEffect(() => {
-    if (!isLoading && issues.length === 0) {
-      navigate({ to: "/upload" });
-    }
-  }, [issues, isLoading, navigate]);
 
   const kpis = useMemo(() => {
     return calculateKPIs(issues);
   }, [issues]);
-
-  if (isLoading) {
-    return <LoadingState message="Loading dashboard..." />;
-  }
 
   if (issues.length === 0) {
     return (

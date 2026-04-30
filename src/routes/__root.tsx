@@ -11,11 +11,7 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
-  const { theme, initFromStorage } = useIssuesStore();
-
-  useEffect(() => {
-    initFromStorage();
-  }, [initFromStorage]);
+  const { theme } = useIssuesStore();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
